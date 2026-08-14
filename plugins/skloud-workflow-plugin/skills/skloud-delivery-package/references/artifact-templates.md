@@ -13,7 +13,7 @@
 
 ## User Experience
 
-## Technical Notes
+## Design / Developer Notes
 
 ## Acceptance Criteria
 - [ ] Given ..., when ..., then ...
@@ -55,3 +55,23 @@
 ## Guardrails
 ```
 
+## AI Design Handoff
+
+```markdown
+Use this context to design the feature direction for SKLoud.
+Do not modify production source files, create branches, commit, push, or open pull requests.
+
+Problem:
+
+Chosen solution:
+
+Design source:
+
+Reference files, screens, or components to inspect:
+
+Required UX behavior:
+
+Acceptance criteria:
+
+Design QA:
+```

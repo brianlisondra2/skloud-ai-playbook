@@ -1,4 +1,4 @@
 interface:
   display_name: "SKLoud Delivery Package"
-  short_description: "Create SKLoud specs with ClickUp/Lovable handoff"
-  default_prompt: "Use $skloud-delivery-package to turn this SKLoud problem into a ClickUp-ready spec and record any Lovable design evidence."
+  short_description: "Create SKLoud planning specs and UI design handoff"
+  default_prompt: "Use $skloud-delivery-package to turn this SKLoud problem into a planning/design package with a ClickUp-ready payload, PRD/spec, UI/UX direction, and any Lovable design evidence. Do not implement code."

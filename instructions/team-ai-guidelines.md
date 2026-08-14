@@ -15,6 +15,7 @@ Use these rules for SKLoud AI-assisted work.
 - Use GitHub or the local checkout for source context.
 - Use ClickUp for tickets and delivery tracking.
 - Use Lovable for design/code exploration only with `DESIGN.md` and current source context.
+- Use production-connected Lovable projects for implementation prompts. Use standalone Lovable projects only as clearly labeled design prototypes.
 - Use Codex for repo edits, reviews, tests, PR prep, and skill/plugin maintenance.
 
 ## Guardrails
@@ -23,4 +24,4 @@ Use these rules for SKLoud AI-assisted work.
 - Do not change authentication, authorization, payments, or destructive data flows without explicit scope.
 - Do not use screenshots alone when source files are available.
 - Do not attach secret values, production credentials, or private environment files to AI prompts.
-
+- Do not claim a Lovable prototype changed production code. Link the prototype separately from implementation PRs or commits.

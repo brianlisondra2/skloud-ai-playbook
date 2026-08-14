@@ -8,6 +8,10 @@ Use this file when preparing the SKLoud AI playbook for team members.
 - ClickUp: product tasks, comments, links, delivery tracking
 - Lovable: design/code exploration from `DESIGN.md` and source context; use production-connected projects for implementation and separate prototypes for design exploration
 
+## Recommended MCP Servers
+
+- shadcn: frontend/UI component docs, examples, registry metadata, and shadcn-compatible component installation for the frontend product repository
+
 ## Permissions
 
 - Prefer read access by default.
@@ -20,4 +24,5 @@ Use this file when preparing the SKLoud AI playbook for team members.
 - Use `plugins/skloud-workflow-plugin` as the team plugin wrapper.
 - Keep reusable workflows as skills inside the plugin.
 - Keep external app setup in workspace settings; do not hard-code credentials or secrets into plugin files.
+- Configure MCP servers such as shadcn through the team-approved Codex MCP configuration path, not inside product source files.
 - When Lovable project creation times out, check the workspace for a newly created project before retrying.

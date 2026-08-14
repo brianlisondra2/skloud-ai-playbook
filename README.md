@@ -24,6 +24,16 @@ plugins/skloud-workflow-plugin/       Codex plugin wrapper with SKLoud skills
 4. Use the templates in `templates/` for Lovable, ClickUp, PRDs, technical specs, and design-system handoff.
 5. For Lovable work from the delivery-package skill, use design prototypes or design briefs only. Use implementation workflows separately when production repo edits are expected.
 
+For a complete new-machine onboarding path, use [instructions/fresh-setup.md](instructions/fresh-setup.md).
+
+Quick setup from the playbook root:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\setup-fresh.ps1 -CloneOnly
+```
+
+Omit `-CloneOnly` to attach product repositories as git submodules instead of independent local clones.
+
 ## Repository Attachment
 
 Run this from the playbook root when you have access to the repos:
@@ -38,9 +48,12 @@ By default, the script adds repos as git submodules under `repos/`. Use `-CloneO
 
 ## Skill Usage
 
-The first included skill is:
+Included skills:
 
 - `skloud-delivery-package`: turns a product problem into a planning/design package with a ClickUp-ready ticket, PRD/spec, UI/UX design notes, Lovable design automation, and source-grounded design handoff. It must not implement code or mutate repositories.
+- `skloud-implement`: reads a ClickUp ticket and linked evidence, inspects the relevant SKLoud repositories, drafts an implementation plan, waits for approval, then implements approved product-code changes.
+
+For frontend/UI component work, configure and use the shadcn MCP server so agents can inspect component docs, examples, registry metadata, and shadcn-compatible installation paths before hand-rolling UI primitives.
 
 ## Team Rule
 

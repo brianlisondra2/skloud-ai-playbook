@@ -1,0 +1,4 @@
+interface:
+  display_name: "SKLoud Implement"
+  short_description: "Implement ClickUp work with Lovable-aware planning"
+  default_prompt: "Use $skloud-implement to read a ClickUp ticket and any Lovable design evidence, draft a plan for review, then implement after approval."

@@ -1,6 +1,6 @@
 ---
 name: skloud-delivery-package
-description: Turn a SKLoud product or engineering problem into an implementation-ready delivery package. Use when Codex should inspect SKLoud frontend/backend repos, recommend a solution, draft a ClickUp-ready ticket, PRD or technical spec, UI/UX notes, Lovable handoff, DESIGN.md context, or implementation prompt for SKLoud work.
+description: Turn a SKLoud product or engineering problem into an implementation-ready delivery package. Use when Codex should inspect SKLoud frontend/backend repos, recommend a solution, draft a ClickUp-ready ticket, PRD or technical spec, UI/UX notes, Lovable design automation, Lovable folder/project setup, DESIGN.md context, or implementation prompt for SKLoud work.
 ---
 
 # SKLoud Delivery Package
@@ -14,6 +14,7 @@ description: Turn a SKLoud product or engineering problem into an implementation
 5. Prepare a PRD or technical spec when useful.
 6. Prepare UI/UX direction grounded in the frontend code when user-facing behavior changes.
 7. Prepare an AI handoff prompt for Lovable, Codex, or another named tool when requested.
+8. When the user provides a Lovable workspace, folder, or project URL, use Lovable connector tools when available to create or update the correct project.
 
 ## Source Defaults
 
@@ -66,11 +67,22 @@ Return:
 When the user wants Lovable:
 
 - Make the prompt code-first.
-- Tell Lovable to modify the existing codebase.
+- Tell Lovable to modify the existing codebase when the production frontend is connected to the Lovable project.
 - Include `DESIGN.md` or source-design context.
 - List exact files to upload or inspect.
 - Add guardrails: no new app shell, no new palette, no route changes, no auth/store changes unless requested.
 - Ask for a preview link, screenshots, exported file, or GitHub branch/commit to attach to ClickUp.
+
+When the user asks to add designs to Lovable:
+
+- Parse Lovable URLs for workspace, folder, and project IDs.
+- List projects in the target workspace before creating a new one.
+- If a production Lovable project exists for `skloud-app-frontend`, send a plan-mode prompt first for complex UI changes.
+- If no production project exists, create a design prototype only. State that it is not the production repo.
+- Make the first screen the actual product/design surface, not a marketing page.
+- Include design variants, responsive states, empty/loading/error states, and implementation notes.
+- Move the created project into the supplied Lovable folder when a folder ID is provided.
+- If Lovable creation times out, search the workspace before retrying because the project may have been created.
 
 ## Guardrails
 
@@ -78,4 +90,3 @@ When the user wants Lovable:
 - Do not rely on screenshots alone when source files are available.
 - Do not copy full product repos into skills.
 - Keep artifacts concise and implementation-ready.
-

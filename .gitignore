@@ -1,0 +1,6 @@
+repos/*/
+!repos/README.md
+*.log
+.DS_Store
+Thumbs.db
+

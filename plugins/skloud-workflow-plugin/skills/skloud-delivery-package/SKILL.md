@@ -10,7 +10,7 @@ description: Turn a SKLoud product or engineering problem into a planning and de
 1. Interpret the request.
 2. Inspect relevant SKLoud source context read-only before final recommendations.
 3. Recommend or refine the solution.
-4. Prepare a ClickUp-ready ticket.
+4. Prepare a ClickUp-ready ticket and ask for confirmation before creating it in ClickUp.
 5. Prepare a PRD or technical spec when useful.
 6. Prepare UI/UX direction grounded in the frontend code when user-facing behavior changes.
 7. Prepare a design-only AI handoff prompt for Lovable, Google Stitch, or another named design tool when requested.
@@ -75,6 +75,14 @@ Return:
 - ClickUp comment/attachment status for Lovable design evidence when a ClickUp task exists
 - Open questions and assumptions
 - Integration limits encountered
+
+## ClickUp Creation Gate
+
+Prepare the ClickUp-ready payload first. Before creating a live ClickUp task, show a concise readiness prompt:
+
+`I have the planning package ready. Do you want me to create the ClickUp task now, or keep this as a draft/spec only?`
+
+Use ClickUp write tools only after the user confirms task creation after this prompt. If the user requested task creation before the package was prepared, still pause at the readiness prompt instead of creating the task immediately.
 
 ## Lovable Handoff
 

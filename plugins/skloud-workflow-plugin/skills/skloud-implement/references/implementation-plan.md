@@ -27,6 +27,13 @@ Use this format after reading the ticket, specs, guidelines, and source context.
 - State, validation, permissions, tenant/data ownership, and error behavior.
 - Migration or rollout notes, when applicable.
 
+### Branch Plan
+
+- Target/base branch and why it is the right starting point.
+- Proposed implementation branch name.
+- Whether a new branch should be created or an existing branch should be reused.
+- Any worktree, remote, or branch-name risks that need user approval.
+
 ### File-Level Work Plan
 
 List likely files to create or edit with the reason for each. If exact files are still uncertain, list search targets and decision criteria.
@@ -52,10 +59,11 @@ End with a concise approval request, such as:
 
 ## After Approval
 
-Before editing, re-check:
+Before creating the branch or editing, re-check:
 
 - The user approved the current plan.
 - The worktree status and existing user changes.
+- The current branch, target/base branch, and proposed implementation branch name.
 - The ticket scope has not changed in ClickUp comments/specs if enough time has passed or the user mentions updates.
 
-During implementation, keep changes scoped to the approved plan. If source inspection reveals a materially different approach is needed, pause and present a plan update before continuing.
+Create or switch to the approved implementation branch before editing product files. During implementation, keep changes scoped to the approved plan. If source inspection reveals a materially different approach is needed, pause and present a plan update before continuing.

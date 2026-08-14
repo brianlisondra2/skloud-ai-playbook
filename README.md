@@ -22,7 +22,7 @@ plugins/skloud-workflow-plugin/       Codex plugin wrapper with SKLoud skills
    - `skloud-backend`
 3. Install or share the `skloud-workflow-plugin` plugin with team members.
 4. Use the templates in `templates/` for Lovable, ClickUp, PRDs, technical specs, and design-system handoff.
-5. For Lovable work, connect the production repo when implementation is expected. Use standalone Lovable projects as design prototypes only, and keep them labeled as such.
+5. For Lovable work from the delivery-package skill, use design prototypes or design briefs only. Use implementation workflows separately when production repo edits are expected.
 
 ## Repository Attachment
 
@@ -40,7 +40,7 @@ By default, the script adds repos as git submodules under `repos/`. Use `-CloneO
 
 The first included skill is:
 
-- `skloud-delivery-package`: turns a product problem into a ClickUp-ready ticket, PRD/spec, UI/UX design notes, Lovable design automation, and AI handoff grounded in SKLoud frontend/backend code.
+- `skloud-delivery-package`: turns a product problem into a planning/design package with a ClickUp-ready ticket, PRD/spec, UI/UX design notes, Lovable design automation, and source-grounded design handoff. It must not implement code or mutate repositories.
 
 ## Team Rule
 

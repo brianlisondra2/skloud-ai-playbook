@@ -1,0 +1,17 @@
+{
+  "name": "skloud-discord-delivery-bot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/bot.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.21.0",
+    "dotenv": "^17.0.0",
+    "openai": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

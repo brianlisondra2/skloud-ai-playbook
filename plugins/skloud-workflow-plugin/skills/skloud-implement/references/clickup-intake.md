@@ -5,12 +5,33 @@
 Use ClickUp tools in this order when available:
 
 1. Get the task by task ID, custom ID, or URL-derived ID.
-2. Include subtasks when they may carry acceptance criteria or implementation details.
-3. Get task comments for clarifications, decisions, QA notes, screenshots, or changed scope.
-4. Search for linked docs or specs mentioned by title, URL, attachment name, or ticket text.
-5. Read linked ClickUp document pages when the task points to ClickUp Docs.
-6. Search the task description, comments, attachments, subtasks, linked docs, and custom fields for Lovable design evidence.
-7. If the task or comments contain attachments, enumerate the attachment metadata and identify design-relevant files before planning.
+2. Read the complete task description first, including embedded `## PRD` and `## Technical Spec` sections.
+3. Include subtasks when they may carry acceptance criteria or implementation details.
+4. Get task comments for clarifications, decisions, QA notes, screenshots, or changed scope.
+5. Search for linked docs or specs mentioned by title, URL, attachment name, or ticket text only when the needed planning content is not already embedded.
+6. Read linked ClickUp document pages when the task points to ClickUp Docs.
+7. Search the task description, comments, attachments, subtasks, linked docs, and custom fields for Lovable design evidence.
+8. If the task or comments contain attachments, enumerate the attachment metadata and identify design-relevant files before planning.
+
+## Embedded PRD / Technical Spec
+
+Treat a complete `## PRD` or `## Technical Spec` section in the ClickUp task description as first-class authoritative planning evidence.
+
+When an embedded planning section exists:
+
+- Read it in full before source inspection or implementation planning.
+- Extract goals, non-goals, proposed experience/behavior, constraints, acceptance criteria, source context, design direction, risks, and implementation handoff notes.
+- Do not require a duplicate `.md` attachment or report the PRD as missing merely because no attachment exists.
+- Treat a local or attached copy as secondary unless the task explicitly marks that copy as authoritative.
+- Check later ClickUp comments for explicit scope changes or corrections. When a later clarification conflicts with the embedded PRD/spec, surface the conflict and use the later explicit decision as the current requirement.
+- If the embedded section appears truncated, incomplete, or references an external authoritative document, retrieve that document before planning.
+
+Before drafting the implementation plan, report one planning-evidence state when a PRD/spec is expected:
+
+- `PRD/spec embedded and read`: include the section name.
+- `PRD/spec external and read`: identify the ClickUp Doc/attachment/link.
+- `PRD/spec referenced but inaccessible`: identify the reference and access gap.
+- `No PRD/spec required`: only when the ticket itself contains sufficient implementation requirements.
 
 ## Lovable Design Intake
 
@@ -48,6 +69,7 @@ Capture:
 
 - Task ID, title, URL, status, assignees, due date, priority, tags, list, and parent/subtask relationship.
 - Problem statement and expected outcome.
+- Embedded PRD/technical-spec goals, non-goals, requirements, constraints, design direction, risks, and handoff notes.
 - User stories, acceptance criteria, QA notes, and non-goals.
 - Explicit frontend, backend, API, database, auth, permission, integration, notification, or analytics requirements.
 - Links to specs, Lovable designs/previews, screenshots, docs, PRs, branches, and related tickets.
@@ -60,8 +82,9 @@ Capture:
 When planning, map each implementation step to ticket evidence:
 
 - `Ticket`: task description, acceptance criteria, or custom fields.
+- `Embedded PRD/Spec`: heading/subsection in the ClickUp description.
 - `Comment`: author/date summary when comments change scope.
-- `Spec`: linked doc/page/section.
+- `External Spec`: linked doc/page/section or attachment when embedding was not suitable.
 - `Lovable`: design URL, preview, screenshot/export, attachment, or design comment; note whether it was actually inspected.
 - `Source`: repository files inspected.
 - `Assumption`: clearly mark anything not directly supported by source material.

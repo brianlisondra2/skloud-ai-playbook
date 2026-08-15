@@ -61,6 +61,10 @@
 Use this context to design the feature direction for SKLoud.
 Do not modify production source files, create branches, commit, push, or open pull requests.
 
+Lovable workspace: SKLoud App's Lovable
+Lovable workspace ID: GYmOd9OHEIPikJwHYMqR
+Expected plan: Pro
+
 Problem:
 
 Chosen solution:

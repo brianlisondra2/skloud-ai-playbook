@@ -1,6 +1,6 @@
 ---
 name: skloud-delivery-package
-description: Turn a SKLoud product or engineering problem into a planning and design delivery package. Use when Codex should inspect SKLoud frontend/backend patterns read-only, recommend a solution, draft a ClickUp-ready ticket, PRD or technical spec, UI/UX notes, Lovable design automation, Lovable folder/project setup, DESIGN.md context, or record planning and design evidence in ClickUp for later implementation. This skill is strictly for planning, product definition, and design handoff; it must not implement code, edit repositories, create branches, commit, push, open PRs, or instruct another tool to modify production source files.
+description: Turn a SKLoud product or engineering problem into a planning and design delivery package. Use when Codex should inspect SKLoud frontend/backend patterns read-only, recommend a solution, draft a ClickUp-ready ticket, PRD or technical spec, prepare UI/UX direction, automatically create or update a design-only Lovable prototype in the SKLoud Pro workspace for user-facing work, set up Lovable folders/projects or DESIGN.md context, or record planning and design evidence in ClickUp for later implementation. This skill is strictly for planning, product definition, and design handoff; it must not implement code, edit repositories, create branches, commit, push, open PRs, or instruct another tool to modify production source files.
 ---
 
 # SKLoud Delivery Package
@@ -14,8 +14,8 @@ description: Turn a SKLoud product or engineering problem into a planning and de
 5. Prepare a PRD or technical spec when useful.
 6. For user-facing work, define the allowed UI design delta before producing design direction.
 7. Prepare UI/UX direction grounded in the frontend code and constrained to the allowed design delta.
-8. Prepare a design-only AI handoff prompt for Lovable, Google Stitch, or another named design tool when requested.
-9. When the user provides or selects a Lovable workspace, folder, or project, verify the target workspace/project before creation or updates and use Lovable connector tools when available to create or update design prototypes only.
+8. For user-facing work, prepare a design-only Lovable brief and, after the required write confirmation, create or update the prototype in the default SKLoud Pro Lovable workspace unless the user explicitly opts out or selects another workspace/tool.
+9. Verify the target Lovable workspace/project before creation or updates. Search for an existing matching project before creating one, then use Lovable connector tools to create or update design prototypes only.
 10. When a PRD or technical spec is implementation-relevant, embed it directly in the ClickUp task description under an explicit `## PRD` or `## Technical Spec` section before implementation handoff.
 11. When a Lovable design, preview, screenshot, or exported file exists, record it on the ClickUp ticket before handoff.
 12. If Lovable creation/update is blocked by permissions, credits, or another connector error, preserve the complete Lovable-ready design brief in ClickUp, mark the design state accurately, and continue the non-Lovable parts of the delivery package.
@@ -38,8 +38,13 @@ This skill is planning/design only.
 - Frontend: `repos/skloud-app-frontend` or `SKLoud-SDS-Devs/skloud-app-frontend`
 - Backend: `repos/skloud-backend` or `SKLoud-SDS-Devs/skloud-backend`
 - ClickUp list: `901614444165`
+- Default Lovable workspace: `SKLoud App's Lovable`
+- Default Lovable workspace ID: `GYmOd9OHEIPikJwHYMqR`
+- Expected Lovable plan: `Pro`
 
 Prefer an existing local checkout under `repos/`. If unavailable, use GitHub connector/source access. If neither is available, state the limitation and produce a best-effort package with assumptions. Do not clone or mutate repositories while using this skill.
+
+For Lovable writes, use the default workspace ID above rather than selecting by display name alone. Verify that the connector still reports this workspace as the SKLoud team workspace on the Pro plan. Never fall back to a personal or free Lovable workspace unless the user explicitly selects it.
 
 ## Frontend Context
 
@@ -133,6 +138,12 @@ Prepare the ClickUp-ready payload first. Before creating a live ClickUp task, sh
 
 Use ClickUp write tools only after the user confirms task creation after this prompt. If the user requested task creation before the package was prepared, still pause at the readiness prompt instead of creating the task immediately.
 
+For user-facing work where Lovable is required, include the design write in the same readiness prompt:
+
+`I have the planning package ready. Do you want me to create or update the Lovable design in the SKLoud Pro workspace and create the ClickUp task now, or keep both as draft handoff artifacts?`
+
+If the user has already explicitly approved Lovable creation/update after the package was prepared, do not ask a second time.
+
 ## Planning Artifact Handoff
 
 Treat the ClickUp task description as the primary durable handoff boundary between planning/design and `skloud-implement`.
@@ -165,7 +176,11 @@ For implementation-oriented tickets, prefer this evidence order:
 
 ## Lovable Handoff
 
-When the user wants Lovable:
+For user-facing work, Lovable design is a standard part of the planning package, not an optional afterthought. Treat creation or update of a design-only prototype in the default SKLoud Pro workspace as the expected deliverable unless the user explicitly opts out. Obtain write confirmation through the combined readiness gate, then create the prototype during planning so it can be scope-QA'd and linked in the ClickUp handoff.
+
+Mark Lovable `not required` only when the request is entirely backend/non-visual or the user explicitly declines design creation. State the reason.
+
+When preparing Lovable work:
 
 - Make the prompt design-first and scope-first.
 - Begin the Lovable brief with the `Design scope` class, `Allowed changes`, `Preserve exactly`, and `Forbidden additions`.
@@ -181,9 +196,12 @@ When the user wants Lovable:
 - Add the Lovable design evidence to the ClickUp task as a comment or attachment when ClickUp write tools are available and the user has approved writes.
 - If ClickUp writes are unavailable, include a clearly labeled `Lovable Design Evidence` section in the ClickUp-ready ticket payload so the creator can paste it into the task.
 
-When the user asks to add designs to Lovable:
+When adding designs to Lovable:
 
-- Resolve the target Lovable workspace first. If multiple workspaces have the same display name, compare workspace IDs/details and use the user-selected workspace; do not assume names are unique.
+- Default to `SKLoud App's Lovable` (`GYmOd9OHEIPikJwHYMqR`) and verify it is the SKLoud team Pro workspace before writing.
+- If the user explicitly selects a different workspace, resolve it by ID and use it only for that request.
+- If multiple workspaces have the same display name, compare workspace IDs/details; never assume names are unique.
+- Do not use `Brian's Lovable` or another personal/free workspace as an automatic fallback.
 - Check the target workspace before creating a project. Use available workspace details such as role, plan, credits, and project visibility to anticipate creation constraints when the connector exposes them.
 - List/search projects in the target workspace before creating a new one to avoid duplicates.
 - If a production Lovable project exists for `skloud-app-frontend`, send only a design/planning prompt with explicit no-source-edit guardrails.

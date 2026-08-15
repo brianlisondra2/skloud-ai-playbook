@@ -1,6 +1,6 @@
 ---
 name: skloud-delivery-package
-description: Turn a SKLoud product or engineering problem into a planning and design delivery package. Use when Codex should inspect SKLoud frontend/backend patterns read-only, recommend a solution, draft a ClickUp-ready ticket, PRD or technical spec, UI/UX notes, Lovable design automation, Lovable folder/project setup, DESIGN.md context, or attach/comment Lovable design links/evidence on ClickUp. This skill is strictly for planning, product definition, and design handoff; it must not implement code, edit repositories, create branches, commit, push, open PRs, or instruct another tool to modify production source files.
+description: Turn a SKLoud product or engineering problem into a planning and design delivery package. Use when Codex should inspect SKLoud frontend/backend patterns read-only, recommend a solution, draft a ClickUp-ready ticket, PRD or technical spec, UI/UX notes, Lovable design automation, Lovable folder/project setup, DESIGN.md context, or attach planning and design evidence to ClickUp for later implementation. This skill is strictly for planning, product definition, and design handoff; it must not implement code, edit repositories, create branches, commit, push, open PRs, or instruct another tool to modify production source files.
 ---
 
 # SKLoud Delivery Package
@@ -15,7 +15,9 @@ description: Turn a SKLoud product or engineering problem into a planning and de
 6. Prepare UI/UX direction grounded in the frontend code when user-facing behavior changes.
 7. Prepare a design-only AI handoff prompt for Lovable, Google Stitch, or another named design tool when requested.
 8. When the user provides a Lovable workspace, folder, or project URL, use Lovable connector tools when available to create or update design prototypes only.
-9. When a Lovable design, preview, screenshot, or exported file exists, record it on the ClickUp ticket before handoff.
+9. When planning artifacts exist locally or are generated during the workflow, attach the implementation-relevant PRD, technical spec, or DESIGN.md to the ClickUp task before implementation handoff when ClickUp write tools are available and writes are approved.
+10. When a Lovable design, preview, screenshot, or exported file exists, record it on the ClickUp ticket before handoff.
+11. Verify the ClickUp task contains enough planning and design evidence for `skloud-implement` to build an implementation plan without depending on files that exist only on one person's machine.
 
 ## Scope Boundary
 
@@ -72,7 +74,7 @@ Return:
 - PRD/spec content or location
 - UI/UX design summary when applicable
 - Lovable design URL, preview URL, screenshots/export references, or design handoff prompt when applicable
-- ClickUp comment/attachment status for Lovable design evidence when a ClickUp task exists
+- ClickUp attachment/comment status for PRD/spec/design evidence when a ClickUp task exists
 - Open questions and assumptions
 - Integration limits encountered
 
@@ -83,6 +85,33 @@ Prepare the ClickUp-ready payload first. Before creating a live ClickUp task, sh
 `I have the planning package ready. Do you want me to create the ClickUp task now, or keep this as a draft/spec only?`
 
 Use ClickUp write tools only after the user confirms task creation after this prompt. If the user requested task creation before the package was prepared, still pause at the readiness prompt instead of creating the task immediately.
+
+## Planning Artifact Handoff
+
+Treat the ClickUp task as the durable handoff boundary between planning/design and `skloud-implement`.
+
+When a ClickUp task exists and a PRD, technical spec, DESIGN.md, or other implementation-relevant planning artifact exists:
+
+- Prefer attaching the actual `.md`, `.pdf`, image, or exported artifact to the ClickUp task instead of leaving it only on the local filesystem.
+- If the artifact was generated locally, locate the exact file and attach it with the ClickUp attachment tool when available and the user has approved ClickUp writes.
+- Use clear filenames such as `PRD-<feature-slug>.md`, `TECH-SPEC-<feature-slug>.md`, or `DESIGN-<feature-slug>.md` when creating new artifacts. Preserve an existing filename when the user already has one.
+- Add or preserve a short `Spec / PRD` reference in the task description or comment so a future agent can identify which attachment is authoritative.
+- Do not claim an artifact is attached until the ClickUp attachment operation succeeds.
+- If attachment tooling is unavailable, state that the artifact remains local and identify the exact file that must be uploaded manually before implementation handoff.
+
+Before declaring a delivery package ready for implementation, report one of these states for each relevant artifact:
+
+- `PRD/spec attached`: include filename.
+- `PRD/spec not required`: explain briefly why.
+- `PRD/spec exists but is not attached`: identify the local/generated file and the blocker.
+
+For implementation-oriented tickets, prefer this evidence order in ClickUp:
+
+1. Task problem, scope, and acceptance criteria.
+2. Attached PRD or technical spec.
+3. Lovable design evidence and design-state notes.
+4. Comments containing later clarifications or scope changes.
+5. Links to relevant source repositories, branches, or related tickets.
 
 ## Lovable Handoff
 
@@ -119,6 +148,19 @@ For user-facing work with a Lovable design, ensure the ClickUp task contains eno
 - Design/developer constraints: files to inspect, no-go areas, and source-code assumptions
 
 Prefer a ClickUp comment for generated or discovered design evidence after the task exists. Prefer attachments for exported screenshots or documents. Never attach secrets, environment files, production credentials, or private data.
+
+## Implementation Handoff Check
+
+Before finishing a delivery package that is expected to move into `skloud-implement`, verify and report:
+
+- ClickUp task exists or a ready-to-create payload is provided.
+- Acceptance criteria are testable.
+- PRD/spec is attached when one exists and materially affects implementation.
+- Lovable design evidence is attached or linked when one exists and affects UI behavior.
+- Later scope-changing comments are recorded on the task.
+- No implementation-critical evidence is left only in an unshared local file without being called out as a blocker.
+
+The goal is for `skloud-implement` to be able to reconstruct the approved requirement, design intent, and acceptance criteria from ClickUp plus the real source repositories.
 
 ## Guardrails
 

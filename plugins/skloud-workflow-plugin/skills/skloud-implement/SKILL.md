@@ -11,14 +11,21 @@ Produce a reviewed plan before making product-code edits or creating implementat
 
 Do not create branches or implement until the user explicitly approves the implementation plan or asks to proceed after reviewing it. If the user starts by saying the plan is already approved, confirm the approved plan source and continue.
 
+For user-facing work, do not draft the implementation plan until ClickUp has been checked for Lovable design evidence and any discovered design attachment/link has either been inspected or explicitly reported as inaccessible.
+
 ## Workflow
 
 1. Identify the ClickUp ticket.
    - Use the ClickUp connector when available.
    - If the user provides a task URL, custom ID, or task ID, retrieve the task directly.
    - If the user gives only keywords, search ClickUp tasks and ask the user to choose when matches are ambiguous.
-   - If ClickUp is unavailable, ask the user for the ticket text, specs, comments, and links.
-2. Read the ticket intake, including Lovable design evidence if present. See [clickup-intake.md](references/clickup-intake.md).
+   - If ClickUp is unavailable, ask the user for the ticket text, specs, comments, attachments, and links.
+2. Read the full ticket intake before source planning. See [clickup-intake.md](references/clickup-intake.md).
+   - Check the task, subtasks, comments, linked docs, custom fields, and attachments for Lovable design evidence.
+   - Do not treat attachment metadata or a filename as having inspected the design.
+   - Retrieve/materialize and inspect design-relevant ClickUp attachments using available file, download, browser, PDF, or image tooling when ClickUp only exposes attachment metadata.
+   - Before a UI implementation plan, establish one state: `Lovable design inspected`, `No Lovable design found`, or `Lovable design found but inaccessible`.
+   - If design evidence is found but inaccessible, treat design-sensitive implementation as blocked unless the user explicitly approves proceeding without it.
 3. Read SKLoud guidelines before planning or implementation.
    - Always read `instructions/team-ai-guidelines.md`, `instructions/repo-attachment.md`, and `instructions/plugin-and-apps.md` from the playbook when present.
    - Read `instructions/frontend-guidelines.md` for frontend/UI work.
@@ -38,11 +45,11 @@ Do not create branches or implement until the user explicitly approves the imple
    - If the target branch has unrelated local changes or an existing branch conflicts with the proposed name, pause and ask how to proceed.
 8. Implement the approved plan.
    - Stay inside the approved scope.
-   - Re-open ticket details and relevant source files when needed instead of relying on memory.
+   - Re-open ticket details, design evidence, and relevant source files when needed instead of relying on memory.
    - Preserve existing architecture, design system, route conventions, API contracts, auth/tenant rules, and test patterns unless the approved plan explicitly changes them.
 9. Validate and report.
    - Run the smallest meaningful checks first, then broader checks when the blast radius warrants it.
-   - Summarize branch created/used, files changed, validation run, residual risks, and any ClickUp/GitHub handoff notes.
+   - Summarize branch created/used, files changed, validation run, residual risks, design evidence used, and any ClickUp/GitHub handoff notes.
 
 ## Source Defaults
 
@@ -60,5 +67,6 @@ Do not copy product source into this skill. Point to repositories, specs, and gu
 - Do not invent routes, API contracts, database fields, permissions, status values, or design-system primitives.
 - Do not modify authentication, authorization, payments, destructive data flows, migrations, or tenant/data ownership behavior unless the ticket and approved plan clearly require it.
 - Do not treat screenshots, prototypes, or Lovable output as production source of truth when repository files are available.
+- Do not claim a Lovable attachment was inspected unless its actual contents were opened/read, not merely its metadata.
 - Do not attach secrets, credentials, `.env` values, or private production data to ClickUp, GitHub, Lovable, or prompts.
 - Prefer focused commits/PR notes that cite the ClickUp task ID or URL when preparing handoff.

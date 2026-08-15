@@ -12,13 +12,14 @@ description: Turn a SKLoud product or engineering problem into a planning and de
 3. Recommend or refine the solution.
 4. Prepare a ClickUp-ready ticket and ask for confirmation before creating it in ClickUp.
 5. Prepare a PRD or technical spec when useful.
-6. Prepare UI/UX direction grounded in the frontend code when user-facing behavior changes.
-7. Prepare a design-only AI handoff prompt for Lovable, Google Stitch, or another named design tool when requested.
-8. When the user provides or selects a Lovable workspace, folder, or project, verify the target workspace/project before creation or updates and use Lovable connector tools when available to create or update design prototypes only.
-9. When a PRD or technical spec is implementation-relevant, embed it directly in the ClickUp task description under an explicit `## PRD` or `## Technical Spec` section before implementation handoff.
-10. When a Lovable design, preview, screenshot, or exported file exists, record it on the ClickUp ticket before handoff.
-11. If Lovable creation/update is blocked by permissions, credits, or another connector error, preserve the complete Lovable-ready design brief in ClickUp, mark the design state accurately, and continue the non-Lovable parts of the delivery package.
-12. Verify the ClickUp task contains enough planning and design evidence for `skloud-implement` to build an implementation plan without depending on files that exist only on one person's machine.
+6. For user-facing work, define the allowed UI design delta before producing design direction.
+7. Prepare UI/UX direction grounded in the frontend code and constrained to the allowed design delta.
+8. Prepare a design-only AI handoff prompt for Lovable, Google Stitch, or another named design tool when requested.
+9. When the user provides or selects a Lovable workspace, folder, or project, verify the target workspace/project before creation or updates and use Lovable connector tools when available to create or update design prototypes only.
+10. When a PRD or technical spec is implementation-relevant, embed it directly in the ClickUp task description under an explicit `## PRD` or `## Technical Spec` section before implementation handoff.
+11. When a Lovable design, preview, screenshot, or exported file exists, record it on the ClickUp ticket before handoff.
+12. If Lovable creation/update is blocked by permissions, credits, or another connector error, preserve the complete Lovable-ready design brief in ClickUp, mark the design state accurately, and continue the non-Lovable parts of the delivery package.
+13. Verify the ClickUp task contains enough planning and design evidence for `skloud-implement` to build an implementation plan without depending on files that exist only on one person's machine.
 
 ## Scope Boundary
 
@@ -52,6 +53,49 @@ When UI consistency matters, inspect:
 
 Capture components, tokens, typography, spacing, radius, dark mode, responsive behavior, interaction states, and nearby examples.
 
+## UI Design Scope Contract
+
+Before asking Lovable or another design tool to generate UI, classify the requested change and explicitly define what may and may not change.
+
+Use the narrowest applicable class:
+
+1. `Layout-only`
+   - May change: spacing, alignment, grouping, width, height, density, responsive arrangement, visual hierarchy, section/card placement, and existing component positioning.
+   - Must not change: actions, buttons, fields, menus, cards, data, labels, flows, navigation, permissions, or feature behavior unless explicitly requested.
+2. `Visual-style-only`
+   - May change: typography, color usage within existing tokens, border/radius/shadow treatment, icon sizing, emphasis, and presentation of existing elements.
+   - Must not add/remove interactive elements or change behavior.
+3. `Interaction refinement`
+   - May change only the explicitly named interactions or states.
+   - Must not invent adjacent actions, fields, routes, or workflows.
+4. `Feature/flow design`
+   - May introduce new elements only when the PRD/problem explicitly requires new capability.
+
+Write the result into the delivery package as:
+
+`Design scope: <class>`
+
+Then list:
+
+- `Allowed changes`: exact categories/components that may change.
+- `Preserve exactly`: existing actions, controls, data fields, routes, and behaviors that must remain.
+- `Forbidden additions`: new buttons, menu items, filters, CTAs, form fields, badges, cards, tabs, routes, metrics, data, empty-state actions, or workflows not explicitly required by the ticket/PRD.
+
+If the request is ambiguous, default to preserving behavior and existing controls. Do not interpret a visual/layout improvement request as permission to invent product functionality.
+
+## Design Fidelity Rules
+
+For source-grounded UI design:
+
+- Treat the current frontend source as the inventory of allowed controls and capabilities unless the PRD explicitly authorizes a product change.
+- Inspect the target screen/component and nearby patterns before writing the design brief.
+- Name the existing controls that must remain and the exact area being redesigned.
+- Require the design to preserve current labels, actions, routes, data fields, and information architecture unless a change is explicitly in scope.
+- A design may reposition, resize, restyle, regroup, or reprioritize existing elements when allowed by the design scope.
+- A design must not invent a plausible-looking action merely because it would make the mockup feel more complete.
+- If a potentially useful new feature is discovered during design, record it separately as `Out-of-scope suggestion` and do not include it in the proposed screen.
+- Prefer a visually incomplete-but-faithful design over a polished mockup that introduces unsupported behavior.
+
 ## Backend Context
 
 When API or data behavior matters, inspect:
@@ -73,6 +117,7 @@ Return:
 - Recommended solution
 - ClickUp task URL or ClickUp-ready payload
 - Embedded PRD/spec status and summary
+- Design scope contract for user-facing work
 - UI/UX design summary when applicable
 - Lovable design URL, preview URL, screenshots/export references, or Lovable-ready design brief when applicable
 - Explicit Lovable state: created/updated, pending because of permissions/credits/tooling, or not required
@@ -113,19 +158,25 @@ For implementation-oriented tickets, prefer this evidence order:
 
 1. Task problem, scope, and acceptance criteria.
 2. Embedded `## PRD` or `## Technical Spec` in the task description.
-3. Lovable design evidence and design-state notes.
-4. Comments containing later clarifications or scope changes.
-5. Links to relevant source repositories, branches, or related tickets.
+3. Design scope contract.
+4. Lovable design evidence and design-state notes.
+5. Comments containing later clarifications or scope changes.
+6. Links to relevant source repositories, branches, or related tickets.
 
 ## Lovable Handoff
 
 When the user wants Lovable:
 
-- Make the prompt design-first.
+- Make the prompt design-first and scope-first.
+- Begin the Lovable brief with the `Design scope` class, `Allowed changes`, `Preserve exactly`, and `Forbidden additions`.
+- State explicitly: `Do not add product functionality that is not present in the inspected source or explicitly required by this ticket/PRD.`
 - Tell Lovable to create a design prototype, design brief, state matrix, or visual direction. Do not ask Lovable to modify production source files.
 - Include `DESIGN.md` or source-design context.
 - List exact files to upload or inspect.
 - Add guardrails: no production source edits, no new app shell, no new palette, no route changes, no auth/store changes unless requested.
+- For layout-only work, explicitly prohibit new controls and content: no new buttons, menu items, filters, form fields, tabs, cards, badges, metrics, routes, CTAs, or placeholder features.
+- Require Lovable to reuse only the actions/data/content proven to exist in the inspected screen and source context.
+- If Lovable believes a new product element would improve the experience, instruct it to put that idea in a separate `Out-of-scope suggestions` note rather than rendering it in the design.
 - Ask for a preview link, screenshots, or exported file.
 - Add the Lovable design evidence to the ClickUp task as a comment or attachment when ClickUp write tools are available and the user has approved writes.
 - If ClickUp writes are unavailable, include a clearly labeled `Lovable Design Evidence` section in the ClickUp-ready ticket payload so the creator can paste it into the task.
@@ -138,12 +189,31 @@ When the user asks to add designs to Lovable:
 - If a production Lovable project exists for `skloud-app-frontend`, send only a design/planning prompt with explicit no-source-edit guardrails.
 - Create design prototypes only. State that they are not production source changes.
 - Make the first screen the actual product/design surface, not a marketing page.
-- Include design variants, responsive states, empty/loading/error states, and design/developer notes.
+- Include only the states required by the current feature and design scope. Do not introduce speculative controls while demonstrating states.
 - Move the created project into the supplied Lovable folder when a folder ID is provided.
 - If Lovable creation times out, search the workspace before retrying because the project may have been created.
 - If Lovable returns a permission/authorization error (for example `403 Forbidden`), do not call the integration unavailable. Report that the connector is connected but the selected workspace/project does not permit the requested write. Record the workspace ID/name and the blocked operation when available.
 - If Lovable is connected but creation is blocked by role, workspace permissions, plan/credits, or another recoverable account constraint, generate the complete Lovable-ready design brief anyway and put it in ClickUp under `## Lovable Design Brief` or a clearly labeled comment. Mark the design state `Lovable design pending — workspace permission/account constraint`.
 - After the user changes workspace permission or account constraints, retry creation against the same resolved workspace unless the user selects a different one.
+
+## Design Scope QA
+
+Before accepting Lovable output or recording it as approved design evidence, compare it against the design scope contract and inspected source.
+
+Reject or request revision when the design:
+
+- adds a button, menu item, filter, field, tab, card, badge, CTA, metric, route, or workflow that was not present in source and not explicitly authorized by the PRD;
+- removes an existing action or data element without explicit scope approval;
+- changes labels or information architecture without a stated requirement;
+- adds backend/data assumptions to make the design work;
+- expands a layout-only request into product feature design.
+
+For every Lovable result, report:
+
+- `Scope QA: pass` when the design stays within the allowed delta.
+- `Scope QA: revision required` when out-of-scope elements are present, followed by a concise list of violations and a corrective Lovable prompt.
+
+Do not hand an out-of-scope design to `skloud-implement` as authoritative evidence.
 
 ## Lovable State Reporting
 
@@ -160,9 +230,11 @@ Never collapse a permission failure into a generic connector failure. This disti
 
 For user-facing work with a Lovable design or pending Lovable brief, ensure the ClickUp task contains enough evidence for `skloud-implement` to read later:
 
+- Design scope class, allowed changes, preserved elements, and forbidden additions
 - Lovable project or preview URL when creation succeeds
 - Target Lovable workspace name/ID when relevant
 - Lovable state, including permission/account blockers when creation has not succeeded
+- Scope QA result for generated Lovable output
 - Full `## Lovable Design Brief` in ClickUp when a design is pending
 - Whether the design is a standalone prototype or source-grounded design brief
 - Screenshots or exported files when available
@@ -178,15 +250,17 @@ Before finishing a delivery package that is expected to move into `skloud-implem
 - ClickUp task exists or a ready-to-create payload is provided.
 - Acceptance criteria are testable.
 - PRD/spec is embedded in the task description when one exists and materially affects implementation, or a clearly identified fallback artifact is authoritative.
+- Design scope contract is explicit for user-facing work.
+- Lovable design passes scope QA before it is treated as authoritative evidence.
 - Lovable design evidence is attached/linked when creation succeeds, or a full Lovable-ready brief plus explicit pending state is recorded when creation is blocked.
 - Later scope-changing comments are recorded on the task.
 - No implementation-critical evidence is left only in an unshared local file without being called out as a blocker.
 
-The goal is for `skloud-implement` to be able to reconstruct the approved requirement, design intent, and acceptance criteria from ClickUp plus the real source repositories.
+The goal is for `skloud-implement` to be able to reconstruct the approved requirement, design intent, and acceptance criteria from ClickUp plus the real source repositories without inheriting speculative product ideas from a design prototype.
 
 ## Guardrails
 
-- Do not invent routes, API contracts, database fields, or design systems.
+- Do not invent routes, API contracts, database fields, design systems, actions, controls, or product capabilities.
 - Do not rely on screenshots alone when source files are available.
 - Do not copy full product repos into skills.
 - Keep artifacts concise and planning/design-ready.

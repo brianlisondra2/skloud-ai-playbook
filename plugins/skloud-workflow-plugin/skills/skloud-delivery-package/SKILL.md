@@ -14,10 +14,11 @@ description: Turn a SKLoud product or engineering problem into a planning and de
 5. Prepare a PRD or technical spec when useful.
 6. Prepare UI/UX direction grounded in the frontend code when user-facing behavior changes.
 7. Prepare a design-only AI handoff prompt for Lovable, Google Stitch, or another named design tool when requested.
-8. When the user provides a Lovable workspace, folder, or project URL, use Lovable connector tools when available to create or update design prototypes only.
+8. When the user provides or selects a Lovable workspace, folder, or project, verify the target workspace/project before creation or updates and use Lovable connector tools when available to create or update design prototypes only.
 9. When a PRD or technical spec is implementation-relevant, embed it directly in the ClickUp task description under an explicit `## PRD` or `## Technical Spec` section before implementation handoff.
 10. When a Lovable design, preview, screenshot, or exported file exists, record it on the ClickUp ticket before handoff.
-11. Verify the ClickUp task contains enough planning and design evidence for `skloud-implement` to build an implementation plan without depending on files that exist only on one person's machine.
+11. If Lovable creation/update is blocked by permissions, credits, or another connector error, preserve the complete Lovable-ready design brief in ClickUp, mark the design state accurately, and continue the non-Lovable parts of the delivery package.
+12. Verify the ClickUp task contains enough planning and design evidence for `skloud-implement` to build an implementation plan without depending on files that exist only on one person's machine.
 
 ## Scope Boundary
 
@@ -73,7 +74,8 @@ Return:
 - ClickUp task URL or ClickUp-ready payload
 - Embedded PRD/spec status and summary
 - UI/UX design summary when applicable
-- Lovable design URL, preview URL, screenshots/export references, or design handoff prompt when applicable
+- Lovable design URL, preview URL, screenshots/export references, or Lovable-ready design brief when applicable
+- Explicit Lovable state: created/updated, pending because of permissions/credits/tooling, or not required
 - ClickUp comment/attachment status for design evidence when a ClickUp task exists
 - Open questions and assumptions
 - Integration limits encountered
@@ -130,20 +132,38 @@ When the user wants Lovable:
 
 When the user asks to add designs to Lovable:
 
-- Parse Lovable URLs for workspace, folder, and project IDs.
-- List projects in the target workspace before creating a new one.
+- Resolve the target Lovable workspace first. If multiple workspaces have the same display name, compare workspace IDs/details and use the user-selected workspace; do not assume names are unique.
+- Check the target workspace before creating a project. Use available workspace details such as role, plan, credits, and project visibility to anticipate creation constraints when the connector exposes them.
+- List/search projects in the target workspace before creating a new one to avoid duplicates.
 - If a production Lovable project exists for `skloud-app-frontend`, send only a design/planning prompt with explicit no-source-edit guardrails.
 - Create design prototypes only. State that they are not production source changes.
 - Make the first screen the actual product/design surface, not a marketing page.
 - Include design variants, responsive states, empty/loading/error states, and design/developer notes.
 - Move the created project into the supplied Lovable folder when a folder ID is provided.
 - If Lovable creation times out, search the workspace before retrying because the project may have been created.
+- If Lovable returns a permission/authorization error (for example `403 Forbidden`), do not call the integration unavailable. Report that the connector is connected but the selected workspace/project does not permit the requested write. Record the workspace ID/name and the blocked operation when available.
+- If Lovable is connected but creation is blocked by role, workspace permissions, plan/credits, or another recoverable account constraint, generate the complete Lovable-ready design brief anyway and put it in ClickUp under `## Lovable Design Brief` or a clearly labeled comment. Mark the design state `Lovable design pending — workspace permission/account constraint`.
+- After the user changes workspace permission or account constraints, retry creation against the same resolved workspace unless the user selects a different one.
+
+## Lovable State Reporting
+
+Before finishing a user-facing delivery package that requested Lovable, report exactly one state:
+
+- `Lovable design created/updated`: include project/preview URL and workspace.
+- `Lovable design pending — workspace permission/account constraint`: connector works, but the requested write was rejected; include the target workspace and blocked operation.
+- `Lovable design pending — connector/tooling unavailable`: no callable Lovable integration exists in the current environment.
+- `Lovable design not required`: explain briefly why.
+
+Never collapse a permission failure into a generic connector failure. This distinction matters because the remediation is different.
 
 ## ClickUp Design Traceability
 
-For user-facing work with a Lovable design, ensure the ClickUp task contains enough evidence for `skloud-implement` to read later:
+For user-facing work with a Lovable design or pending Lovable brief, ensure the ClickUp task contains enough evidence for `skloud-implement` to read later:
 
-- Lovable project or preview URL
+- Lovable project or preview URL when creation succeeds
+- Target Lovable workspace name/ID when relevant
+- Lovable state, including permission/account blockers when creation has not succeeded
+- Full `## Lovable Design Brief` in ClickUp when a design is pending
 - Whether the design is a standalone prototype or source-grounded design brief
 - Screenshots or exported files when available
 - Design intent and important states: desktop, tablet, mobile, empty, loading, error, disabled, and dark mode when applicable
@@ -158,7 +178,7 @@ Before finishing a delivery package that is expected to move into `skloud-implem
 - ClickUp task exists or a ready-to-create payload is provided.
 - Acceptance criteria are testable.
 - PRD/spec is embedded in the task description when one exists and materially affects implementation, or a clearly identified fallback artifact is authoritative.
-- Lovable design evidence is attached or linked when one exists and affects UI behavior.
+- Lovable design evidence is attached/linked when creation succeeds, or a full Lovable-ready brief plus explicit pending state is recorded when creation is blocked.
 - Later scope-changing comments are recorded on the task.
 - No implementation-critical evidence is left only in an unshared local file without being called out as a blocker.
 

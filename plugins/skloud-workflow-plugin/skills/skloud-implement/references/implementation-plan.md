@@ -25,7 +25,7 @@ Use this format after reading the ticket, specs, guidelines, and source context.
 - Frontend changes, when applicable.
 - Backend/API/data changes, when applicable.
 - State, validation, permissions, tenant/data ownership, and error behavior.
-- Migration or rollout notes, when applicable.
+- Migration or rollout notes, when applicable. If API/backend work is expected to add or modify migration files, list the likely migration files and state that the PR must receive exact `php artisan migrate --path=database/migrations/<file>.php` command(s) for those files.
 
 ### Branch Plan
 
@@ -44,6 +44,7 @@ List likely files to create or edit with the reason for each. If exact files are
 - Manual QA steps.
 - Responsive/theme/browser checks for UI work.
 - Data setup or fixtures needed.
+- PR handoff check for API/backend migrations: comment the exact file-specific migration command(s) on the GitHub PR before final handoff.
 
 ### Risks And Questions
 

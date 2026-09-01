@@ -53,6 +53,7 @@ For user-facing work, do not draft the implementation plan until ClickUp has bee
    - Preserve existing architecture, design system, route conventions, API contracts, auth/tenant rules, and test patterns unless the approved plan explicitly changes them.
 9. Validate and report.
    - Run the smallest meaningful checks first, then broader checks when the blast radius warrants it.
+   - If API/backend code changes add or modify migration files, comment on the GitHub PR with the exact migration command for those specific files before final handoff. Use `php artisan migrate --path=database/migrations/<file>.php` from the Laravel app root, include one command per migration file, and add any required storage/linking or rollout note when relevant.
    - Summarize branch created/used, files changed, validation run, residual risks, PRD/spec evidence used, design evidence used, and any ClickUp/GitHub handoff notes.
 
 ## Source Defaults
@@ -72,6 +73,7 @@ Do not copy product source into this skill. Point to repositories, specs, and gu
 - Do not create or switch branches before user approval unless the user explicitly asks for branch setup only.
 - Do not invent routes, API contracts, database fields, permissions, status values, or design-system primitives.
 - Do not modify authentication, authorization, payments, destructive data flows, migrations, or tenant/data ownership behavior unless the ticket and approved plan clearly require it.
+- When approved API/backend work includes migration files, make the migration rollout visible in the PR by commenting the exact file-specific migration command(s).
 - Do not treat screenshots, prototypes, or Lovable output as production source of truth when repository files are available.
 - Do not claim a Lovable attachment was inspected unless its actual contents were opened/read, not merely its metadata.
 - Do not attach secrets, credentials, `.env` values, or private production data to ClickUp, GitHub, Lovable, or prompts.
